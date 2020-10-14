@@ -59,7 +59,6 @@ def subset_vector_layers(hucCode,nwm_streams_fileName,nwm_headwaters_fileName,nh
     nhd_streams.loc[:,'is_nwm_headwater'] = False
     # nhd_streams_tree = STRtree(nhd_streams.geometry)
 
-#################################################################################################################
     # convert geometries to WKB representation
     nhd_streams['b_geom'] = None
     for index, linestring in enumerate(nhd_streams.geometry):
@@ -70,6 +69,7 @@ def subset_vector_layers(hucCode,nwm_streams_fileName,nwm_headwaters_fileName,nh
     headwaterstreams = []
     referencedpoints = []
     nwm_headwater_snapped = nwm_headwaters.copy()
+
     for index, point in tqdm(enumerate(nwm_headwaters.geometry),total=len(nwm_headwaters.geometry)):
         # convert headwaterpoint geometries to WKB representation
         wkb_points = dumps(point)
@@ -99,19 +99,23 @@ def subset_vector_layers(hucCode,nwm_streams_fileName,nwm_headwaters_fileName,nh
         cumulative_line = []
         relativedistlst = []
         # collect all nhd stream segment linestring verticies
+
         for point in zip(*shply_linestring.coords.xy):
             cumulative_line = cumulative_line + [point]
             relativedist = shply_linestring.project(Point(point))
             relativedistlst = relativedistlst + [relativedist]
+
         # add linear referenced headwater point to closest nhd stream segment
         if not headpoint in cumulative_line:
             cumulative_line = cumulative_line + [headpoint]
             relativedist = shply_linestring.project(headpoint)
             relativedistlst = relativedistlst + [relativedist]
+
         # sort by relative line distance to place headwater point in linestring
         sortline = pd.DataFrame({'geom' : cumulative_line, 'dist' : relativedistlst}).sort_values('dist')
         shply_linestring = LineString(sortline.geom.tolist())
         referencedpoints = referencedpoints + [headpoint]
+
         # split the new linestring at the new headwater point
         try:
             line1,line2 = split(shply_linestring, headpoint)
@@ -126,12 +130,6 @@ def subset_vector_layers(hucCode,nwm_streams_fileName,nwm_headwaters_fileName,nh
 
     # drop binary geometry
     nhd_streams = nhd_streams.drop(columns=['b_geom'])
-#################################################################################################################
-    # for index, row in tqdm(nwm_headwaters.iterrows(),total=len(nwm_headwaters)):
-    #     distances = nhd_streams.distance(row['geometry'])
-    #     # nearestGeom = nhd_streams_tree.nearest(row['geometry'])
-    #     min_index = np.argmin(distances)
-    #     nhd_streams.loc[min_index,'is_nwm_headwater'] = True
 
     # writeout nwm headwaters
     if not nwm_headwaters.empty:

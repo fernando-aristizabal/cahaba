@@ -115,7 +115,7 @@ echo -e $startDiv"Drop thalweg elevations by "$negativeBurnValue" units $hucNumb
 date -u
 Tstart
 [ ! -f $outputHucDataDir/dem_burned.tif ] && \
-gdal_calc.py --quiet --type=Float32 --overwrite --co "COMPRESS=LZW" --co "BIGTIFF=YES" --co "TILED=YES" -A $outputHucDataDir/dem_meters.tif -B $outputHucDataDir/flows_grid_boolean.tif --calc="A-float32($negativeBurnValue)*B" --outfile="$outputHucDataDir/dem_burned.tif" --NoDataValue=$ndv
+gdal_calc.py --quiet --type=Float32 --overwrite --co "COMPRESS=LZW" --co "BIGTIFF=YES" --co "TILED=YES" -A $outputHucDataDir/dem_meters.tif -B $outputHucDataDir/flows_grid_boolean.tif --calc="A-$negativeBurnValue*B" --outfile="$outputHucDataDir/dem_burned.tif" --NoDataValue=$ndv
 Tcount
 
 ## PIT REMOVE BURNED DEM ##
@@ -124,8 +124,6 @@ date -u
 Tstart
 [ ! -f $outputHucDataDir/dem_burned_filled.tif ] && \
 rd_depression_filling $outputHucDataDir/dem_burned.tif $outputHucDataDir/dem_burned_filled.tif
-# rd_depression_filling $outputHucDataDir/dem_burned.tif $outputHucDataDir/dem_burned_filled_richdem.tif
-# mpiexec -n 4 $taudemDir/pitremove -z $outputHucDataDir/dem_burned.tif -fel $outputHucDataDir/dem_burned_filled.tif
 Tcount
 
 ## D8 FLOW DIR ##

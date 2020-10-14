@@ -45,7 +45,6 @@ if input_flows.HydroID.dtype != 'int': input_flows.HydroID = input_flows.HydroID
 output_flows = input_flows.merge(input_majorities[['HydroID','feature_id']],on='HydroID')
 if output_flows.HydroID.dtype != 'int': output_flows.HydroID = output_flows.HydroID.astype(int)
 output_flows = output_flows.merge(relevant_input_nwmflows[['order_','feature_id']],on='feature_id')
-output_flows['HydroID'] = output_flows['HydroID'].astype(int)
 
 # read in manning's n values
 with open(mannings_json, "r") as read_file:

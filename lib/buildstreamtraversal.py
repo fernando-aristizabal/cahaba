@@ -43,8 +43,8 @@ class BuildStreamTraversalColumns(object):
 
                 stream_centroid = gpd.GeoDataFrame({'geometry':modelstream.geometry.centroid}, crs=modelstream.crs, geometry='geometry')
                 stream_wbdjoin = gpd.sjoin(stream_centroid, WBD8, how='left', op='within')
-                stream_wbdjoin = stream_wbdjoin.rename(columns={"geometry": "midpoint", "index_right": "HUC8id"})
-                modelstream = modelstream.join(stream_wbdjoin).drop(columns=['midpoint'])
+                stream_wbdjoin = stream_wbdjoin.rename(columns={"geometry": "centroid", "index_right": "HUC8id"})
+                modelstream = modelstream.join(stream_wbdjoin).drop(columns=['centroid'])
 
                 modelstream['seqID'] = (modelstream.groupby('HUC8id').cumcount(ascending=True)+1).astype('str').str.zfill(4)
                 modelstream = modelstream.loc[modelstream['HUC8id'].notna(),:]
