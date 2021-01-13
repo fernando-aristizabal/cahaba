@@ -254,7 +254,8 @@ def run_alpha_test(fim_run_dir, branch_name, test_id, return_interval, compare_t
 
         # Define paths to inundation_raster and forecast file.
         inundation_raster = os.path.join(branch_test_case_dir, 'inundation_extent.tif')
-        forecast = os.path.join(TEST_CASES_DIR, 'validation_data_' + benchmark_category, current_huc, return_interval, benchmark_category + '_huc_' + current_huc + '_flows_' + return_interval + '.csv')
+        #forecast = os.path.join(TEST_CASES_DIR, 'validation_data_' + benchmark_category, current_huc, return_interval, benchmark_category + '_huc_' + current_huc + '_flows_' + return_interval + '.csv')
+        forecast = os.path.join('/data/temp', 'FILTERED_FORECAST_'+ return_interval + '.csv')
     
         # Run inundate.
         print("-----> Running inundate() to produce modeled inundation extent for the " + return_interval + " return period...")
