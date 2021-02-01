@@ -58,7 +58,7 @@ filterParameter_domain = {
                    }
 """
 filterNames = ['Itersine']
-filterParameter_domain = {  'Itersine' : {'overlap' : range(1,11)}  }
+filterParameter_domain = {  'Itersine' : {'overlap' : [6]}  }
 
 for filterName in filterNames:
 
